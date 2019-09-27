@@ -1,5 +1,5 @@
 use clap::{App, AppSettings, Arg, SubCommand};
-use std::process::exit;
+//use std::process::exit;
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -30,19 +30,22 @@ fn main() {
                 .arg(Arg::with_name("KEY").help("A string key").required(true)),
         )
         .get_matches();
-
+    let mut kv = kvs::KvStore::new();
     match matches.subcommand() {
         ("set", Some(_matches)) => {
-            eprintln!("unimplemented");
-            exit(1);
+            kv.set(
+                _matches.value_of("KEY").unwrap().to_string(),
+                _matches.value_of("VALUE").unwrap().to_string(),
+            );
         }
         ("get", Some(_matches)) => {
-            eprintln!("unimplemented");
-            exit(1);
+            println!(
+                "{:?}\n",
+                kv.get(_matches.value_of("KEY").unwrap().to_string())
+            );
         }
         ("rm", Some(_matches)) => {
-            eprintln!("unimplemented");
-            exit(1);
+            kv.remove(_matches.value_of("KEY").unwrap().to_string());
         }
         _ => unreachable!(),
     }
